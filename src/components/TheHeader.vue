@@ -6,20 +6,39 @@
       </svg>
     </div>
 
-    <v-text-field label="packages" dark @keypress.enter="search()" />
+    <v-text-field
+      v-model="query"
+      label="packages" dark
+      @keypress.enter="newSearch()"
+    />
 
-    <v-btn color="secondary" class="ma-2 white--text" @click="search()">
+    <v-btn
+      color="secondary"
+      class="ma-2 white--text"
+      :disabled="!query"
+      @click="newSearch()"
+    >
       Search <v-icon right dark>mdi-magnify</v-icon>
     </v-btn>
   </div>
 </template>
 
 <script>
+import { search } from '../utils'
+
 export default {
   name: 'TheHeader',
+  mixins: [search],
   methods: {
-    search () {
-      alert('ororo!')
+    newSearch () {
+      this.page = 1
+      this.search()
+    }
+  },
+  beforeMount () {
+    if (this.$route.query.search) {
+      this.query = this.$route.query.search
+      this.search()
     }
   }
 }

@@ -33,7 +33,7 @@
 export default {
   name: 'TheModal',
   data: () => ({
-    dialog: true
+    dialog: false
   })
 }
 </script>
