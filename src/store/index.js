@@ -10,9 +10,17 @@ export default new Vuex.Store({
     searchQuery: '',
     packagesList: [],
     totalResults: 0,
-    packagePreview: null,
     currentPage: 1,
-    isLoading: false
+    isLoading: false,
+    modal: false,
+    packageInfo: {
+      name: null,
+      version: null,
+      registry: null,
+      files: null,
+      versions: null,
+      stats: null
+    }
   },
   getters: {
     encodedSearchQuery: state => encodeURI(state.searchQuery),
@@ -29,7 +37,16 @@ export default new Vuex.Store({
     setPackagesList (state, payload) { state.packagesList = payload.packagesList },
     setTotalResults (state, payload) { state.totalResults = payload.totalResults },
     setCurrentPage (state, payload) { state.currentPage = payload.currentPage },
-    setIsLoading (state, payload) { state.isLoading = payload.isLoading }
+    setIsLoading (state, payload) { state.isLoading = payload.isLoading },
+    showHideModal (state, payload) { state.modal = payload.isVisible },
+    setPackageMainInfo (state, payload) {
+      state.packageInfo.name = payload.name
+      state.packageInfo.version = payload.version
+    },
+    setPackageInfo (state, payload) {
+      state.packageInfo = { ...state.packageInfo, ...payload }
+    }
+
   },
   actions: {
   }

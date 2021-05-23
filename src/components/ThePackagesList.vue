@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <the-modal />
     <v-row>
       <v-col>
         <v-list two-line v-if="packagesList.length > 0">
@@ -23,13 +22,11 @@
 <script>
 import { mapState } from 'vuex'
 
-import TheModal from './TheModal.vue'
 import OnePackage from './OnePackage'
 
 export default {
   name: 'PackagesList',
   components: {
-    TheModal,
     OnePackage
   },
   computed: mapState(['packagesList', 'totalResults'])

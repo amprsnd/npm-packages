@@ -14,6 +14,48 @@ function request (url) {
     })
 }
 
+function formatStats (data) {
+  let popularFiles = []
+  const downloads = []
+
+  for (const file in data.files) {
+    popularFiles.push({
+      x: file,
+      y: data.files[file].total,
+      downloads: data.files[file].dates
+    })
+  }
+
+  popularFiles.sort((a, b) => a.y < b.y)
+
+  if (popularFiles.length > 0) {
+    const downloadsObj = popularFiles[0].downloads
+
+    for (const date in downloadsObj) {
+      downloads.push({
+        x: date,
+        y: downloadsObj[date]
+      })
+    }
+  }
+
+  popularFiles = [...popularFiles.slice(0, 10).reverse()]
+  return {
+    popular: {
+      series: [{
+        name: 'Downloads',
+        data: popularFiles
+      }]
+    },
+    downloads: {
+      series: [{
+        name: 'Downloads',
+        data: downloads
+      }]
+    }
+  }
+}
+
 const search = {
   computed: {
     query: {
@@ -45,13 +87,34 @@ const search = {
   }
 }
 
-const show = {
-  request,
+const getPackageInfo = {
   methods: {
-    show () {
-      //
+    request,
+    getPackageInfo (name, version) {
+      this.$store.commit('setPackageInfo', {
+        registry: null,
+        files: null,
+        versions: null,
+        stats: null
+      })
+
+      Promise.all([
+        this.request(`${config.api.registrySearch}?text=${name}&size=1&from=0`),
+        this.request(`${config.api.jsdelivrPackage}/${name}@${version}`),
+        this.request(`${config.api.jsdelivrPackage}/${name}`),
+        this.request(`${config.api.jsdelivrPackage}/${name}@${version}/stats/week`)
+      ])
+        .then(data => {
+          this.$store.commit('setPackageInfo', {
+            registry: data[0].objects[0].package,
+            files: data[1],
+            versions: data[2],
+            stats: formatStats(data[3])
+          })
+        })
+        .catch(err => console.log(err))
     }
   }
 }
 
-export { search, show }
+export { search, getPackageInfo }

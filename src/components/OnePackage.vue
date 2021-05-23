@@ -9,10 +9,7 @@
           Keywords:
           <v-chip
             v-for="(keyword, i) in pkg.keywords" :key="pkg.name + keyword + i"
-            class="mr-1"
-            color="accent"
-            text-color="black"
-            x-small
+            class="mr-1" color="accent" text-color="black" x-small
             @click="keywordSearch(keyword)"
           >
             {{ keyword }}
@@ -21,7 +18,11 @@
       </v-list-item-content>
 
       <v-list-item-icon>
-        <v-btn color="primary" fab small dark>
+        <v-btn
+          color="primary"
+          fab small dark
+          @click="showPackage(pkg.name, pkg.version)"
+        >
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-list-item-icon>
@@ -47,6 +48,10 @@ export default {
       this.query = keyword
       this.page = 1
       this.search()
+    },
+    showPackage (name, version) {
+      this.$store.commit('showHideModal', { isVisible: true })
+      this.$store.commit('setPackageInfo', { name, version })
     }
   }
 }
