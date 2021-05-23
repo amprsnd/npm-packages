@@ -3,9 +3,15 @@
     <v-card class="flex" flat tile>
 
       <v-card-title class="primary">
+        <span class="caption">Test task Frozeneon</span>
         <v-spacer></v-spacer>
-        <v-btn v-for="icon in icons" :key="icon" class="mx-4" dark icon>
-          <v-icon size="24px">{{ icon }}</v-icon>
+        <v-btn
+          v-for="link in links"
+          :key="link[0]"
+          :href="link[1]" target="_blank"
+          class="mx-4" dark icon
+        >
+          <v-icon size="24px">{{ link[0] }}</v-icon>
         </v-btn>
       </v-card-title>
 
@@ -21,10 +27,10 @@
 export default {
   name: 'TheFooter',
   data: () => ({
-    icons: [
-      'mdi-github',
-      'mdi-send-circle-outline',
-      'mdi-at'
+    links: [
+      ['mdi-github', 'https://github.com/amprsnd?tab=repositories'],
+      ['mdi-send-circle-outline', 'https://t.me/amprsnd'],
+      ['mdi-at', 'mailto:n.pyatayev@gmail.com']
     ]
   })
 }
