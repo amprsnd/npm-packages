@@ -76,13 +76,19 @@ const search = {
         this.$router.push({ query: { search: this.$store.getters.encodedSearchQuery } })
       }
 
+      this.$store.commit('setLoadingStatus', { status: null })
+
       const uri = `${config.api.registrySearch}?text=${this.query}&size=${config.pageSize}&from=${this.$store.getters.offset}`
       this.request(uri)
         .then(res => {
           this.$store.commit('setPackagesList', { packagesList: res.objects })
           this.$store.commit('setTotalResults', { totalResults: res.total })
+          if (res.total === 0) this.$store.commit('setLoadingStatus', { status: 'nothing' })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          this.$store.commit('setLoadingStatus', { status: 'error' })
+          return err
+        })
     }
   }
 }
@@ -91,6 +97,7 @@ const getPackageInfo = {
   methods: {
     request,
     getPackageInfo (name, version) {
+      this.$store.commit('setPackageLoadingStatus', { status: 'loading' })
       this.$store.commit('setPackageInfo', {
         registry: null,
         files: null,
@@ -111,8 +118,12 @@ const getPackageInfo = {
             versions: data[2],
             stats: formatStats(data[3])
           })
+          this.$store.commit('setPackageLoadingStatus', { status: 'complete' })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          this.$store.commit('setPackageLoadingStatus', { status: 'error' })
+          return err
+        })
     }
   }
 }

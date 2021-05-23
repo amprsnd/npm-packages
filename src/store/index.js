@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     searchQuery: '',
+    loadingStatus: null,
     packagesList: [],
     totalResults: 0,
     currentPage: 1,
@@ -19,7 +20,8 @@ export default new Vuex.Store({
       registry: null,
       files: null,
       versions: null,
-      stats: null
+      stats: null,
+      loadingStatus: null
     }
   },
   getters: {
@@ -34,6 +36,7 @@ export default new Vuex.Store({
 
   mutations: {
     setSearchQuery (state, payload) { state.searchQuery = decodeURI(payload.searchQuery) },
+    setLoadingStatus (state, payload) { state.loadingStatus = payload.status },
     setPackagesList (state, payload) { state.packagesList = payload.packagesList },
     setTotalResults (state, payload) { state.totalResults = payload.totalResults },
     setCurrentPage (state, payload) { state.currentPage = payload.currentPage },
@@ -45,9 +48,9 @@ export default new Vuex.Store({
     },
     setPackageInfo (state, payload) {
       state.packageInfo = { ...state.packageInfo, ...payload }
+    },
+    setPackageLoadingStatus (state, payload) {
+      state.packageInfo.loadingStatus = payload.status
     }
-
-  },
-  actions: {
   }
 })

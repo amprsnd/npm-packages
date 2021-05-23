@@ -2,6 +2,22 @@
   <v-container>
     <v-row>
       <v-col>
+        <v-alert
+          v-if="loadingStatus === 'nothing'"
+          type="warning"
+          class="my-3"
+        >
+          No packages found for your request.
+        </v-alert>
+
+        <v-alert
+          v-if="loadingStatus === 'error'"
+          type="error"
+          class="my-3"
+        >
+          Error loading data. Please, try again
+        </v-alert>
+
         <v-list two-line v-if="packagesList.length > 0">
           <h1 class="font-weight-light">
             Search results for "{{ decodeURI($route.query.search) }}"
@@ -29,7 +45,7 @@ export default {
   components: {
     OnePackage
   },
-  computed: mapState(['packagesList', 'totalResults'])
+  computed: mapState(['packagesList', 'totalResults', 'loadingStatus'])
 }
 </script>
 
